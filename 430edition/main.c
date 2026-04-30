@@ -26,7 +26,7 @@ int main()
         diclayout();
         break;
     case 3:
-        //游戏模式
+        checklogin();//检查登陆状态
         break;
     case 4:
         //数据存储管理
