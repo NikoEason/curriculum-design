@@ -5,6 +5,8 @@ struct user {
     char password[20];
 };
 int choice;
+int state=0; //登录状态，0表示未登录，1表示已登录
+//账户登录函数
 void login() {
     char username[20];
     char password[20];
@@ -23,12 +25,15 @@ void login() {
     while (fread(&u, sizeof(struct user), 1, file)) {
         if (strcmp(u.username, username) == 0 && strcmp(u.password, password) == 0) {
             printf("登录成功！\n");
+            state=1;
             return;
         }
     }
     printf("用户名或密码错误！\n");
     fclose(file);
+    state=0;
 }
+//账户注册界面
 void regis() {
     char username[20];
     char password[20];
@@ -61,6 +66,7 @@ case 2:
     break;
 }
 }
+//账户登录注册界面
 void account(){
     printf("按1登录账户\n");
     printf("按2注册账户\n");
@@ -77,3 +83,12 @@ default:
     break;
 }
 }
+void checklogin(){
+    if(state==1){
+        printf("已登录\n");
+    }else{
+        printf("未登录\n");
+        account();
+    }
+}
+
