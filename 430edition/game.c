@@ -61,7 +61,7 @@ int selectQuestionCount() {
 // 随机出题并返回得分
 int startGame(int questionCount) {
     int score = 0;
-    int used[MAX_WORDS] = {0}; 
+    int used[Max_words] = {0}; 
     
     printf("\n===== 开始答题 =====\n");
     printf("规则：根据中文释义输入对应的英文单词\n\n");
@@ -85,7 +85,7 @@ int startGame(int questionCount) {
         scanf("%s", userAnswer);
     // 判断答案
         char correctAnswer[20];
-        strcpy(correctAnswer, dictionary[index].english);
+        strcpy(correctAnswer, dictionary[index].word);
         toLowerCase(userAnswer);
         toLowerCase(correctAnswer);
         
@@ -93,7 +93,7 @@ int startGame(int questionCount) {
             printf("✅ 回答正确！\n\n");
             score += 10; // 每题10分
         } else {
-            printf("❌ 回答错误！正确答案是：%s\n\n", dictionary[index].english);
+            printf("❌ 回答错误！正确答案是：%s\n\n", dictionary[index].word);
         }
     }
     
@@ -179,7 +179,6 @@ void gameModule() {
 }
 
 int main() {
-    // 程序启动时先加载词典文件
     if (fileExists("dic.dat")) {
         loadFromFile();
     }
@@ -189,8 +188,8 @@ int main() {
         printf("\n========================================\n");
         printf("       英语单词学习系统\n");
         printf("========================================\n");
-        printf("1. 词典管理模块\n");
-        printf("2. 单词游戏模块\n");
+        printf("1. 词典管理\n");
+        printf("2. 单词游戏\n");
         printf("3. 查看排行榜\n");
         printf("0. 退出系统\n");
         printf("========================================\n");
