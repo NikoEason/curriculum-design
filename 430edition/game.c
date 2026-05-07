@@ -133,7 +133,7 @@ void updateRanking(const char *username, int score) {
                 rankingList[j+1] = temp;
             }
         }
-    }
+    } 
 }
 
 // 显示排行榜
@@ -150,7 +150,21 @@ void showRanking() {
         printf("%d\t%s\t\t%d\n", i+1, rankingList[i].username, rankingList[i].score);
     }
 }
-
+ // 保存到文件
+void saveRankingToFile() {
+    FILE *fp = fopen("ranking.dat", "wb");
+    if (fp == NULL) return;
+    fwrite(&rankingCount, sizeof(int), 1, fp);
+    fwrite(rankingList, sizeof(Ranking), rankingCount, fp);
+    fclose(fp);
+}
+void loadRankingFromFile() {
+    FILE *file = fopen("ranking.dat", "rb");
+    if (file == NULL) return;
+    fread(&rankingCount, sizeof(int), 1, file);
+    fread(rankingList, sizeof(Ranking), rankingCount, file);
+    fclose(file);
+}
 // 游戏模块主入口
 void gameModule() {
     // 检查词库是否为空
@@ -182,7 +196,7 @@ int main() {
     if (fileExists("dic.dat")) {
         loadFromFile();
     }
-    
+    loadRankingFromFile(); 
     int choice;
     while (1) {
         printf("\n========================================\n");
@@ -196,19 +210,22 @@ int main() {
         printf("请输入你的选择：");
         
         scanf("%d", &choice);
-        while (getchar() != '\n'); // 清除缓冲区
+        while (getchar() != '\n'); 
         
         switch (choice) {
             case 1:
-                diclayout(); // 进入你的词典管理菜单
+                diclayout(); 
                 break;
             case 2:
-                gameModule(); // 进入单词游戏
+                gameModule(); 
                 break;
             case 3:
-                showRanking(); // 查看排行榜
+                showRanking(); 
                 break;
             case 0:
+                printf("\n正在保存数据，请稍候...\n");
+                saveToFile();        
+                saveRankingToFile();
                 printf("感谢使用，再见！\n");
                 return 0;
             default:
