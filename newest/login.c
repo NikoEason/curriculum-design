@@ -11,12 +11,13 @@ struct ranks{
     char username[20];
     int sco;
 };
+struct user current;
 int choice;
 int state=0; //登录状态,0表示未登录,1表示已登录
 //账户登录函数
 void choose(){
-    printf("1、登录账户\n");
-    printf("2、注册账户\n");
+    printf("按1登录账户\n");
+    printf("按2注册账户\n");
     scanf("%d",&choice);
 switch (choice)
 {
@@ -50,6 +51,7 @@ void login() {
         if (strcmp(u.username, username) == 0 && strcmp(u.password, password) == 0) {
             printf("登录成功！\n");
             state=1;
+            current=u;
             fclose(file);
             return;
         }
@@ -67,7 +69,6 @@ void regis() {
     scanf("%s", username);
     printf("请输入密码：");
     scanf("%s", password);
-
     FILE *file = fopen("user.dat", "a");
     if (file == NULL) {
         printf("无法打开用户文件！\n");
@@ -100,22 +101,38 @@ void checklogin(){
         account();
     }
 }
-void savesco(){
+void savesco(int score){
     //if(state==1)
+    current.sco=score;
+    FILE *fp=fopen("user.dat","r");
+    fseek(fp, 0, SEEK_END);
+    long length = ftell(fp);
+    int n=length / sizeof(struct user);
+    fseek(fp, 0, SEEK_SET);
+    struct user cur[n];
+    int k;
+    for(k=0;k<n;k++){
+    fread(&cur[k], sizeof(struct user), 1, fp);
+        if (current.id==cur[k].id) {
+            cur[k].sco=current.sco;
+        }
+    }
+    fclose(fp);
+    fp=fopen("user.dat","w");
+    for(k=0;k<n;k++){
+    fwrite(&cur[k], sizeof(struct user), 1, fp);
+        
+    }
+    fclose(fp);
     FILE *file = fopen("user.dat", "r");
     if (file == NULL) {
         printf("无法打开用户文件！\n");
         return;
     }
     struct user u;
-    fseek(file, 0, SEEK_END);
-    long length = ftell(file);
-    int n=length / sizeof(struct user);
-    fseek(file, 0, SEEK_SET);
     //int *p;
     //p=(int *)malloc(n*sizeof(int));
     struct ranks r[n];
-    int k=0;
     int i,j;
     while (fread(&u, sizeof(struct user), 1, file)){
         r[k].id=u.id;
@@ -124,6 +141,7 @@ void savesco(){
         k++;
     }
     fclose(file);
+    //排序
     for(i=0;i<n-1;i++){
         for(j=0;j<n-1-i;j++){
             if(r[j].sco<r[j+1].sco){
